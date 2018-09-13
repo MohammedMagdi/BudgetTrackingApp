@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetTrackingApp", "BudgetTrackingApp\BudgetTrackingApp.csproj", "{19C9F926-0029-4385-B9D9-144653A17CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetTracking.DAL", "BudgetTracking.DAL\BudgetTracking.DAL.csproj", "{509F01F9-5A2B-4560-8E1B-A2E34B5D1A62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19C9F926-0029-4385-B9D9-144653A17CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19C9F926-0029-4385-B9D9-144653A17CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19C9F926-0029-4385-B9D9-144653A17CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19C9F926-0029-4385-B9D9-144653A17CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509F01F9-5A2B-4560-8E1B-A2E34B5D1A62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509F01F9-5A2B-4560-8E1B-A2E34B5D1A62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509F01F9-5A2B-4560-8E1B-A2E34B5D1A62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509F01F9-5A2B-4560-8E1B-A2E34B5D1A62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2192404-27C8-42BA-BD6D-7A7FA7CBDCE7}
+	EndGlobalSection
+EndGlobal

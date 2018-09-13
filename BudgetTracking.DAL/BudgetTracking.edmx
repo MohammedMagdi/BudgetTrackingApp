@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BudgetTrackingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BudgetType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BudgetValue">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BudgetTypeID" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="RecurringCostTypeID" Type="int" />
+        </EntityType>
+        <EntityType Name="RecurringCostType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_BudgetValue_BudgetType">
+          <End Role="BudgetType" Type="Self.BudgetType" Multiplicity="1" />
+          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BudgetType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BudgetValue">
+              <PropertyRef Name="BudgetTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BudgetValue_RecurringCostType">
+          <End Role="RecurringCostType" Type="Self.RecurringCostType" Multiplicity="0..1" />
+          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecurringCostType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BudgetValue">
+              <PropertyRef Name="RecurringCostTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BudgetTrackingModelStoreContainer">
+          <EntitySet Name="BudgetType" EntityType="Self.BudgetType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BudgetValue" EntityType="Self.BudgetValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecurringCostType" EntityType="Self.RecurringCostType" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BudgetValue_BudgetType" Association="Self.FK_BudgetValue_BudgetType">
+            <End Role="BudgetType" EntitySet="BudgetType" />
+            <End Role="BudgetValue" EntitySet="BudgetValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BudgetValue_RecurringCostType" Association="Self.FK_BudgetValue_RecurringCostType">
+            <End Role="RecurringCostType" EntitySet="RecurringCostType" />
+            <End Role="BudgetValue" EntitySet="BudgetValue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BudgetTrackingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BudgetType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="BudgetValues" Relationship="Self.FK_BudgetValue_BudgetType" FromRole="BudgetType" ToRole="BudgetValue" />
+        </EntityType>
+        <EntityType Name="BudgetValue">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BudgetTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecurringCostTypeID" Type="Int32" />
+          <NavigationProperty Name="BudgetType" Relationship="Self.FK_BudgetValue_BudgetType" FromRole="BudgetValue" ToRole="BudgetType" />
+          <NavigationProperty Name="RecurringCostType" Relationship="Self.FK_BudgetValue_RecurringCostType" FromRole="BudgetValue" ToRole="RecurringCostType" />
+        </EntityType>
+        <EntityType Name="RecurringCostType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="BudgetValues" Relationship="Self.FK_BudgetValue_RecurringCostType" FromRole="RecurringCostType" ToRole="BudgetValue" />
+        </EntityType>
+        <Association Name="FK_BudgetValue_BudgetType">
+          <End Role="BudgetType" Type="Self.BudgetType" Multiplicity="1" />
+          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BudgetType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BudgetValue">
+              <PropertyRef Name="BudgetTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BudgetValue_RecurringCostType">
+          <End Role="RecurringCostType" Type="Self.RecurringCostType" Multiplicity="0..1" />
+          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecurringCostType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BudgetValue">
+              <PropertyRef Name="RecurringCostTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BudgetTrackingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BudgetTypes" EntityType="Self.BudgetType" />
+          <EntitySet Name="BudgetValues" EntityType="Self.BudgetValue" />
+          <EntitySet Name="RecurringCostTypes" EntityType="Self.RecurringCostType" />
+          <AssociationSet Name="FK_BudgetValue_BudgetType" Association="Self.FK_BudgetValue_BudgetType">
+            <End Role="BudgetType" EntitySet="BudgetTypes" />
+            <End Role="BudgetValue" EntitySet="BudgetValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BudgetValue_RecurringCostType" Association="Self.FK_BudgetValue_RecurringCostType">
+            <End Role="RecurringCostType" EntitySet="RecurringCostTypes" />
+            <End Role="BudgetValue" EntitySet="BudgetValues" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BudgetTrackingModelStoreContainer" CdmEntityContainer="BudgetTrackingEntities">
+          <EntitySetMapping Name="BudgetTypes">
+            <EntityTypeMapping TypeName="BudgetTrackingModel.BudgetType">
+              <MappingFragment StoreEntitySet="BudgetType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BudgetValues">
+            <EntityTypeMapping TypeName="BudgetTrackingModel.BudgetValue">
+              <MappingFragment StoreEntitySet="BudgetValue">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BudgetTypeID" ColumnName="BudgetTypeID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="RecurringCostTypeID" ColumnName="RecurringCostTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecurringCostTypes">
+            <EntityTypeMapping TypeName="BudgetTrackingModel.RecurringCostType">
+              <MappingFragment StoreEntitySet="RecurringCostType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
