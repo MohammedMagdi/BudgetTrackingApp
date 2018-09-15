@@ -1,21 +1,81 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<!-- <router-outlet></router-outlet> -->
 
-<router-outlet></router-outlet>
+<body data-gr-c-s-loaded="true">
+  <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Budget Tracking App</a>
+    </nav>
+  </header>
+  <p-growl [(value)]="msgs"></p-growl>
+  <div [ngBusy]="busy"></div>
+  <main role="main" class="container">
+
+    <p-fieldset>
+      <p-header>Add New</p-header>
+
+      <div class="form-group">
+        <label for="float-input">
+          Enter Amount <span style="color:red"> *</span>
+        </label>&nbsp;
+        <span class="ui-float-label">
+          <input id="float-input" type="number" size="30" pInputText [(ngModel)]="BudgetModel.Amount">
+          <label for="float-input">Amount</label>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="float-input">
+          Start Date <span style="color:red"> *</span>
+        </label>&nbsp;
+        <div class="ui-inputgroup">
+          <p-calendar [ngModel]="BudgetModel.Date | date: 'MM/dd/yyyy'" name="Date" [showIcon]="true" [monthNavigator]="true"
+            [yearNavigator]="true" (onSelect)="getStartDate($event)"></p-calendar>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="selectedbudgetType">
+          Choose budget Type <span style="color:red"> *</span>
+        </label>&nbsp;
+        <p-dropdown [options]="budgetTypeList" [(ngModel)]="selectedbudgetType" optionLabel="Type" name="selectedbudgetType"
+          placeholder="Type" filter="true" (onChange)="changebudgetType($event, selectedbudgetType)">
+        </p-dropdown>
+      </div>
+
+      <div class="form-group" *ngIf="IsRecurringCost">
+        <label for="selectedrecurringCost">
+          Repeated <span style="color:red"> *</span>
+        </label>&nbsp;
+        <p-dropdown [options]="recurringCostList" [(ngModel)]="selectedrecurringCost" optionLabel="Value" name="selectedbudgetType"
+          placeholder="vlaue" filter="true" (onChange)="changerecurringCost($event, selectedrecurringCost)">
+        </p-dropdown>
+      </div>
+
+      <div class="row pull-right">
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-primary" (click)="save()">
+            Save
+          </button>
+        </div>
+      </div>
+
+    </p-fieldset>
+
+    <p-fieldset>
+      <p-header>Budget Tracking</p-header>
+
+      <button type="button" pButton (click)="update($event)" label="Calculate Budget this year"></button>
+
+      <div>
+        <p-chart type="bar" [data]="data" width="400px" height="400px" [responsive]="false"></p-chart>
+      </div>
+
+    </p-fieldset>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span class="text-muted">Budget Tracking App.</span>
+    </div>
+  </footer>
+</body>
