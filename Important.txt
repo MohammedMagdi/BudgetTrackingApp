@@ -1,0 +1,13 @@
+The technology used:-
+- SQL server 2017
+- .Net Web API 2 with visual studio 2017
+- EntityFramwork 6
+- Angular 6 
+- PrimeNG lib
+
+steps to run:-
+- in folder "db"  run on SQL server 'BudgetTracking.sql' 
+ or restore 'BudgetTracking.bak' file
+- open project with vs 2017 restore node module and NuGet package  
+- copy the port of 'BudgetTracking.API' and replace it with "BaseURL" in file "environment.ts" file which in 'BudgetTrackingApp'
+- run  'BudgetTrackingApp'
