@@ -22,12 +22,15 @@ export class AppComponent {
 
   busy: any;
 
-  BudgetModel: BudgetValue = { ID: 0, BudgetTypeID: null, Amount: null, Date: null, RecurringCostTypeID: null };
+  BudgetModel: BudgetValue = { ID: 0, BudgetTypeID: null, Amount: null, Date: null, RecurringTypeID: null, Description: null };
   IsRecurringCost: boolean = false;
 
   data: any;
   options: any;
   dateValue: any;
+
+  NetFlowYear: any = { ID: 2018, Year: 2018 };
+  YearsList = [];
   constructor(
     private messageService: MessageService,
     private _budgetService: BudgetService) { }
@@ -35,7 +38,9 @@ export class AppComponent {
   ngOnInit() {
     // this.msgs = [];
     // this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'welcome' });
-
+    for (let i = 2000; i <= 2030; i++) {
+      this.YearsList.push({ ID: i, Year: i });
+    }
     this.GetBudgetType();
 
 
@@ -91,7 +96,7 @@ export class AppComponent {
   }
 
   changerecurringCost(event, recurringCost: RecurringCostType) {
-    this.BudgetModel.RecurringCostTypeID = recurringCost.ID;
+    this.BudgetModel.RecurringTypeID = recurringCost.ID;
   }
 
   getStartDate($event) {
@@ -103,7 +108,7 @@ export class AppComponent {
     if (this.ValidateData()) {
       this.busy = this._budgetService.create(this.BudgetModel).subscribe(res => {
         debugger
-        this.BudgetModel = { ID: 0, BudgetTypeID: null, Amount: null, Date: null, RecurringCostTypeID: null };
+        this.BudgetModel = { ID: 0, BudgetTypeID: this.BudgetModel.BudgetTypeID, Amount: null, Date: null, RecurringTypeID: this.BudgetModel.RecurringTypeID, Description: null };
         this.msgs = [];
         this.msgs = [{
           severity: 'success', summary: 'Success Message',
@@ -128,7 +133,7 @@ export class AppComponent {
     if (this.BudgetModel.BudgetTypeID < 1) {
       messages.push({ severity: 'error', summary: 'Error Message', detail: 'Enter valid Budget Type' });
     }
-    if (this.BudgetModel.RecurringCostTypeID > 1) {
+    if (this.BudgetModel.RecurringTypeID > 1) {
       if (this.selectedrecurringCost.length === 0) {
         messages.push({ severity: 'error', summary: 'Error Message', detail: 'Enter valid recurring Cost' });
       }
@@ -144,7 +149,7 @@ export class AppComponent {
     }
   }
   update(event: Event) {
-    this._budgetService.GetBudget().subscribe(res => {
+    this._budgetService.GetBudget(this.NetFlowYear.Year).subscribe(res => {
       console.log('res: ', res);
 
       this.data = {
@@ -172,5 +177,6 @@ export class AppComponent {
 
 
   }
+
 
 }

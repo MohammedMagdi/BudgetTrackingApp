@@ -5,11 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="ae4aae6f7cb64d49a88e0ad1e3e3c48b" Name="Diagram1">
-        <EntityTypeShape EntityType="BudgetTrackingModel.BudgetType" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="BudgetTrackingModel.BudgetValue" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="BudgetTrackingModel.RecurringCostType" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
-        <AssociationConnector Association="BudgetTrackingModel.FK_BudgetValue_BudgetType" ManuallyRouted="false" />
-        <AssociationConnector Association="BudgetTrackingModel.FK_BudgetValue_RecurringCostType" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BudgetTrackingModel.BudgetType" Width="1.5" PointX="0.75" PointY="5.375" />
+        <EntityTypeShape EntityType="BudgetTrackingModel.BudgetValue" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="BudgetTrackingModel.RecurringType" Width="1.5" PointX="0.75" PointY="1.375" />
+        <AssociationConnector Association="BudgetTrackingModel.FK_BudgetValue_BudgetType" />
+        <AssociationConnector Association="BudgetTrackingModel.FK_BudgetValue_RecurringCostType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

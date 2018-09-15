@@ -72,7 +72,7 @@
       <DependentUpon>BudgetTracking.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecurringCostType.cs">
+    <Compile Include="RecurringType.cs">
       <DependentUpon>BudgetTracking.tt</DependentUpon>
     </Compile>
   </ItemGroup>

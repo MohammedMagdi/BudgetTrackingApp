@@ -4,5 +4,6 @@ export class BudgetValue{
     public BudgetTypeID : number;
     public Amount : number;
     public Date : Date;
-    public RecurringCostTypeID : number;
+    public RecurringTypeID : number;
+    public Description : number;
 }

@@ -29,7 +29,7 @@
         </label>&nbsp;
         <div class="ui-inputgroup">
           <p-calendar [ngModel]="BudgetModel.Date | date: 'MM/dd/yyyy'" name="Date" [showIcon]="true" [monthNavigator]="true"
-            [yearNavigator]="true" (onSelect)="getStartDate($event)"></p-calendar>
+            [yearNavigator]="true" yearRange="2000:2030" (onSelect)="getStartDate($event)"></p-calendar>
         </div>
       </div>
 
@@ -51,6 +51,14 @@
         </p-dropdown>
       </div>
 
+      <div class="form-group">
+        <label for="selectedrecurringCost">
+          Description 
+        </label>
+        <div><textarea pInputTextarea [(ngModel)]="BudgetModel.Description" maxlength="200"></textarea></div>
+        
+      </div>
+
       <div class="row pull-right">
         <div class="col-md-12">
           <button type="submit" class="btn btn-primary" (click)="save()">
@@ -63,11 +71,22 @@
 
     <p-fieldset>
       <p-header>Budget Tracking</p-header>
-
-      <button type="button" pButton (click)="update($event)" label="Calculate Budget this year"></button>
+      <div class="form-group">
+        <label for="float-input">
+          Choose Date <span style="color:red"> *</span>
+        </label>&nbsp;
+        <div class="ui-inputgroup">
+          <p-dropdown [options]="YearsList" [(ngModel)]="NetFlowYear" optionLabel="Year" name="NetFlowYear"
+          placeholder="Select Year" filter="true" >
+        </p-dropdown>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="button" pButton (click)="update($event)" label="Calculate Budget"></button>
+        </div>
+      </div>
+      
 
       <div>
-        <p-chart type="bar" [data]="data" width="400px" height="400px" [responsive]="false"></p-chart>
+        <p-chart type="bar" [data]="data" width="750px" height="400px" ></p-chart>
       </div>
 
     </p-fieldset>

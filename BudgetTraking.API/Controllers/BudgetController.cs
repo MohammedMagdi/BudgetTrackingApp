@@ -73,11 +73,11 @@ namespace BudgetTraking.API.Controllers
         {
             try
             {
-                List<RecurringCostType> recurringCostTypeList = db.RecurringCostTypes.ToList();
+                List<RecurringType> recurringCostTypeList = db.RecurringTypes.ToList();
 
                 if (recurringCostTypeList.Count > 0)
                 {
-                    List<RecurringCostTypeDTO> result = ConfigMapper.MapList<RecurringCostType, RecurringCostTypeDTO>(recurringCostTypeList);
+                    List<RecurringCostTypeDTO> result = ConfigMapper.MapList<RecurringType, RecurringCostTypeDTO>(recurringCostTypeList);
 
                     return Ok(result);
                 }
@@ -96,17 +96,23 @@ namespace BudgetTraking.API.Controllers
         }
         #endregion
 
-        #region get
+        #region GetBudget
         [HttpGet]
         [Route("GetBudget")]
-        public IHttpActionResult GetBudget()
+        public IHttpActionResult GetBudget(int model)
         {
 
             try
             {
-               
+                int NetFlowYear = DateTime.Now.Year;
+                if (model > 0)
+                {
+                    NetFlowYear = model;
+                }
+
                 List<int> IncomeSumByMonthList = new List<int>();
                 List<int> CostSumByMonthList = new List<int>();
+
                 List<int> EmptyMonths = new List<int>();
                 for (int i = 1; i <= 12; i++)
                 {
@@ -118,7 +124,7 @@ namespace BudgetTraking.API.Controllers
 
                                             where budgetType.Type == "Income"
                                             where value.BudgetTypeID == budgetType.ID
-                                            where value.Date.Year == DateTime.Now.Year
+                                            where value.Date.Year == NetFlowYear
 
                                             select value).OrderBy(x => x.Date).ToList();
 
@@ -127,10 +133,12 @@ namespace BudgetTraking.API.Controllers
 
                                            where budgetType.Type != "Income"
                                            where value.BudgetTypeID == budgetType.ID
-                                           where value.Date.Year == DateTime.Now.Year
+                                           where value.Date.Year == NetFlowYear
 
                                            select value).OrderBy(x => x.Date).ToList();
 
+                int MonthlyID = db.RecurringTypes.Where(x => x.Value == "Monthly").FirstOrDefault().ID;
+                Dictionary<int, int> recurringCostByMonth = new Dictionary<int, int>();
 
                 foreach (var month in EmptyMonths)
                 {
@@ -138,6 +146,21 @@ namespace BudgetTraking.API.Controllers
                     IncomeSumByMonthList.Add(incomeSum);
 
                     int costSum = costs.Where(value => value.Date.Month == month).ToList().Sum(x => x.Amount);
+
+                    List<int> amount = costs.Where(value => value.Date.Month == month && value.RecurringTypeID == MonthlyID).Select(x=>x.Amount).ToList();
+                    if (amount.Count > 0)
+                    {
+                        recurringCostByMonth.Add(month, amount.Sum());
+                    }
+
+                    foreach (KeyValuePair<int, int> entry in recurringCostByMonth)
+                    {
+                        if (entry.Key <= month)
+                        {
+                            costSum += entry.Value;
+                        }
+                    }
+                    
                     CostSumByMonthList.Add(costSum);
                 }
 
@@ -151,10 +174,7 @@ namespace BudgetTraking.API.Controllers
             }
 
         }
-        public class CustomType
-        {
-            public int value { get; set; }
-        }
+        
         #endregion
     }
 }

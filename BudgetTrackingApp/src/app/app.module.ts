@@ -15,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ChartModule } from 'primeng/chart';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ChartModule } from 'primeng/chart';
     FormsModule,
     InputTextModule,
     CalendarModule,
-    ChartModule
+    ChartModule,
+    InputTextareaModule
   ],
   providers: [MessageService, HttpClient],
   bootstrap: [AppComponent]

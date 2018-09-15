@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BudgetTrackingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BudgetTrackingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="BudgetType">
           <Key>
             <PropertyRef Name="ID" />
@@ -20,14 +20,15 @@
           <Property Name="BudgetTypeID" Type="int" Nullable="false" />
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
-          <Property Name="RecurringCostTypeID" Type="int" />
+          <Property Name="RecurringTypeID" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
-        <EntityType Name="RecurringCostType">
+        <EntityType Name="RecurringType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Value" Type="nchar" MaxLength="10" />
+          <Property Name="Value" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <Association Name="FK_BudgetValue_BudgetType">
           <End Role="BudgetType" Type="Self.BudgetType" Multiplicity="1" />
@@ -42,42 +43,54 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BudgetValue_RecurringCostType">
-          <End Role="RecurringCostType" Type="Self.RecurringCostType" Multiplicity="0..1" />
+          <End Role="RecurringType" Type="Self.RecurringType" Multiplicity="0..1" />
           <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RecurringCostType">
+            <Principal Role="RecurringType">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="BudgetValue">
-              <PropertyRef Name="RecurringCostTypeID" />
+              <PropertyRef Name="RecurringTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BudgetTrackingModelStoreContainer">
           <EntitySet Name="BudgetType" EntityType="Self.BudgetType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BudgetValue" EntityType="Self.BudgetValue" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RecurringCostType" EntityType="Self.RecurringCostType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecurringType" EntityType="Self.RecurringType" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_BudgetValue_BudgetType" Association="Self.FK_BudgetValue_BudgetType">
             <End Role="BudgetType" EntitySet="BudgetType" />
             <End Role="BudgetValue" EntitySet="BudgetValue" />
           </AssociationSet>
           <AssociationSet Name="FK_BudgetValue_RecurringCostType" Association="Self.FK_BudgetValue_RecurringCostType">
-            <End Role="RecurringCostType" EntitySet="RecurringCostType" />
+            <End Role="RecurringType" EntitySet="RecurringType" />
             <End Role="BudgetValue" EntitySet="BudgetValue" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BudgetTrackingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BudgetTrackingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BudgetTypes" EntityType="BudgetTrackingModel.BudgetType" />
+          <EntitySet Name="BudgetValues" EntityType="BudgetTrackingModel.BudgetValue" />
+          <EntitySet Name="RecurringTypes" EntityType="BudgetTrackingModel.RecurringType" />
+          <AssociationSet Name="FK_BudgetValue_BudgetType" Association="BudgetTrackingModel.FK_BudgetValue_BudgetType">
+            <End Role="BudgetType" EntitySet="BudgetTypes" />
+            <End Role="BudgetValue" EntitySet="BudgetValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BudgetValue_RecurringCostType" Association="BudgetTrackingModel.FK_BudgetValue_RecurringCostType">
+            <End Role="RecurringType" EntitySet="RecurringTypes" />
+            <End Role="BudgetValue" EntitySet="BudgetValues" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="BudgetType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="BudgetValues" Relationship="Self.FK_BudgetValue_BudgetType" FromRole="BudgetType" ToRole="BudgetValue" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BudgetValues" Relationship="BudgetTrackingModel.FK_BudgetValue_BudgetType" FromRole="BudgetType" ToRole="BudgetValue" />
         </EntityType>
         <EntityType Name="BudgetValue">
           <Key>
@@ -87,21 +100,22 @@
           <Property Name="BudgetTypeID" Type="Int32" Nullable="false" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RecurringCostTypeID" Type="Int32" />
-          <NavigationProperty Name="BudgetType" Relationship="Self.FK_BudgetValue_BudgetType" FromRole="BudgetValue" ToRole="BudgetType" />
-          <NavigationProperty Name="RecurringCostType" Relationship="Self.FK_BudgetValue_RecurringCostType" FromRole="BudgetValue" ToRole="RecurringCostType" />
+          <Property Name="RecurringTypeID" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BudgetType" Relationship="BudgetTrackingModel.FK_BudgetValue_BudgetType" FromRole="BudgetValue" ToRole="BudgetType" />
+          <NavigationProperty Name="RecurringType" Relationship="BudgetTrackingModel.FK_BudgetValue_RecurringCostType" FromRole="BudgetValue" ToRole="RecurringType" />
         </EntityType>
-        <EntityType Name="RecurringCostType">
+        <EntityType Name="RecurringType">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Value" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="BudgetValues" Relationship="Self.FK_BudgetValue_RecurringCostType" FromRole="RecurringCostType" ToRole="BudgetValue" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="BudgetValues" Relationship="BudgetTrackingModel.FK_BudgetValue_RecurringCostType" FromRole="RecurringType" ToRole="BudgetValue" />
         </EntityType>
         <Association Name="FK_BudgetValue_BudgetType">
-          <End Role="BudgetType" Type="Self.BudgetType" Multiplicity="1" />
-          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <End Type="BudgetTrackingModel.BudgetType" Role="BudgetType" Multiplicity="1" />
+          <End Type="BudgetTrackingModel.BudgetValue" Role="BudgetValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="BudgetType">
               <PropertyRef Name="ID" />
@@ -112,31 +126,18 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_BudgetValue_RecurringCostType">
-          <End Role="RecurringCostType" Type="Self.RecurringCostType" Multiplicity="0..1" />
-          <End Role="BudgetValue" Type="Self.BudgetValue" Multiplicity="*" />
+          <End Type="BudgetTrackingModel.RecurringType" Role="RecurringType" Multiplicity="0..1" />
+          <End Type="BudgetTrackingModel.BudgetValue" Role="BudgetValue" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="RecurringCostType">
+            <Principal Role="RecurringType">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="BudgetValue">
-              <PropertyRef Name="RecurringCostTypeID" />
+              <PropertyRef Name="RecurringTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="BudgetTrackingEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="BudgetTypes" EntityType="Self.BudgetType" />
-          <EntitySet Name="BudgetValues" EntityType="Self.BudgetValue" />
-          <EntitySet Name="RecurringCostTypes" EntityType="Self.RecurringCostType" />
-          <AssociationSet Name="FK_BudgetValue_BudgetType" Association="Self.FK_BudgetValue_BudgetType">
-            <End Role="BudgetType" EntitySet="BudgetTypes" />
-            <End Role="BudgetValue" EntitySet="BudgetValues" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BudgetValue_RecurringCostType" Association="Self.FK_BudgetValue_RecurringCostType">
-            <End Role="RecurringCostType" EntitySet="RecurringCostTypes" />
-            <End Role="BudgetValue" EntitySet="BudgetValues" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -145,27 +146,28 @@
           <EntitySetMapping Name="BudgetTypes">
             <EntityTypeMapping TypeName="BudgetTrackingModel.BudgetType">
               <MappingFragment StoreEntitySet="BudgetType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="BudgetValues">
             <EntityTypeMapping TypeName="BudgetTrackingModel.BudgetValue">
               <MappingFragment StoreEntitySet="BudgetValue">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="BudgetTypeID" ColumnName="BudgetTypeID" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RecurringTypeID" ColumnName="RecurringTypeID" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="RecurringCostTypeID" ColumnName="RecurringCostTypeID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="BudgetTypeID" ColumnName="BudgetTypeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RecurringCostTypes">
-            <EntityTypeMapping TypeName="BudgetTrackingModel.RecurringCostType">
-              <MappingFragment StoreEntitySet="RecurringCostType">
-                <ScalarProperty Name="ID" ColumnName="ID" />
+          <EntitySetMapping Name="RecurringTypes">
+            <EntityTypeMapping TypeName="BudgetTrackingModel.RecurringType">
+              <MappingFragment StoreEntitySet="RecurringType">
                 <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

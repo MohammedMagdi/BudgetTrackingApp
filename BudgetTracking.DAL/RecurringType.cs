@@ -15,11 +15,11 @@ namespace BudgetTracking.DAL
 using System;
     using System.Collections.Generic;
     
-public partial class BudgetType
+public partial class RecurringType
 {
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public BudgetType()
+    public RecurringType()
     {
 
         this.BudgetValues = new HashSet<BudgetValue>();
@@ -29,7 +29,7 @@ public partial class BudgetType
 
     public int ID { get; set; }
 
-    public string Type { get; set; }
+    public string Value { get; set; }
 
 
 

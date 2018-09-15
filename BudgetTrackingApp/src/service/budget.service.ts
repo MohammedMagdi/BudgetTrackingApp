@@ -25,8 +25,8 @@ export class BudgetService {
     return this._httpClient.post(this.baseUrl, model);
   }
 
-  GetBudget(): any {
-    const url = `${this.baseUrl}/GetBudget`;
+  GetBudget(model): any {
+    const url = `${this.baseUrl}/GetBudget?model=` + model;
     return this._httpClient.get<any>(url);
   }
 
